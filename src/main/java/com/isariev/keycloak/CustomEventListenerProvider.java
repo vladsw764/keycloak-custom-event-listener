@@ -1,4 +1,4 @@
-package com.cevher.keycloak;
+package com.isariev.keycloak;
 
 import org.jboss.logging.Logger;
 import org.keycloak.events.Event;
@@ -35,7 +35,7 @@ public class CustomEventListenerProvider
 
         if (EventType.REGISTER.equals(event.getType())) {
 
-            event.getDetails().forEach((key, value) -> log.debugf("%s : %s",key, value));
+            event.getDetails().forEach((key, value) -> log.debugf("%s : %s", key, value));
 
             RealmModel realm = this.model.getRealm(event.getRealmId());
             UserModel user = this.session.users().getUserById(event.getUserId(), realm);
@@ -43,7 +43,6 @@ public class CustomEventListenerProvider
         }
 
     }
-
 
 
     @Override
@@ -61,13 +60,12 @@ public class CustomEventListenerProvider
             sendUserData(user);
         }
     }
+
     private void sendUserData(UserModel user) {
         String data =
                 "{\"id\": " + user.getId() + "\"," +
                         "{\"email\": " + user.getEmail() + "\"," +
                         "\"userName\":\"" + user.getUsername() + "\"," +
-                        "\"firstName\":\"" + user.getFirstName() + "\"," +
-                        "\"lastName\":\"" + user.getLastName() + "\"," +
                         "}";
         try {
             Client.postService(data);
@@ -76,8 +74,10 @@ public class CustomEventListenerProvider
             log.errorf("Failed to call API: %s", e);
         }
     }
+
     @Override
-    public void close() {}
+    public void close() {
+    }
 
     private String toString(Event event) {
 
@@ -139,10 +139,6 @@ public class CustomEventListenerProvider
             sb.append(newRegisteredUser.getEmail());
             sb.append(", getUsername=");
             sb.append(newRegisteredUser.getUsername());
-            sb.append(", getFirstName=");
-            sb.append(newRegisteredUser.getFirstName());
-            sb.append(", getLastName=");
-            sb.append(newRegisteredUser.getLastName());
         }
         sb.append(", ipAddress=");
         sb.append(event.getAuthDetails().getIpAddress());
